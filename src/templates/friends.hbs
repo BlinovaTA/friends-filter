@@ -1,0 +1,14 @@
+<ul class="friends-list">
+  {{#each items}}
+
+  <li class="friend" id={{id}} draggable="true">
+    <div class="friend__container">
+      <img src="{{photo_100}}" class="friend__logo" />
+      <span>{{first_name}} {{last_name}}</span>
+    </div>
+    <button type="submit" class="friend__button">
+      <img src="../img/friends.svg" alt="icon" class="to-other-list">
+    </button>
+  </li>
+  {{/each}}
+</ul>
