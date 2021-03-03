@@ -12,12 +12,15 @@ export default class FriendsFilter {
     await this.VkApi.init();
     this.setTitle();
 
-    let friends = await this.VkApi.getFriends();
-    let bestFriends = this.getData();
+    const storageData = this.getData();
 
-    if (bestFriends.length > 0) {
-      friends = friends.filter(friend => bestFriends.filter(best => friend.id === best.id).length === 0);
-    }
+    let bestFriends = [];
+    let friends = await this.VkApi.getFriends();
+
+    storageData.forEach(id => {
+      bestFriends.push(friends.find(item => item.id === id));
+      friends = friends.filter(item => item.id !== id);
+    });
 
     this.friendsContainer = new Friends('friends', friends);
     this.bestFriendsContainer = new Friends('best-friends', bestFriends);
@@ -126,7 +129,15 @@ export default class FriendsFilter {
   }
 
   setBestFriendsToStorage() {
-    this.setData(this.bestFriendsContainer.getItems());
+    const items = this.bestFriendsContainer.getItems();
+
+    let data = items.reduce((prev, item) => {
+      prev.push(item.id);
+
+      return prev;
+    }, []);
+
+    this.setData(data);
   }
 
   friendsInputHandler(e) {
